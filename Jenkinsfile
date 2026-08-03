@@ -21,13 +21,14 @@ pipeline {
 
         stage('Build') {
             steps {
-                bat 'mvnw.cmd clean package -DskipTests'
+                sh 'chmod +x mvnw'
+                sh './mvnw clean package -DskipTests'
             }
         }
 
         stage('Test') {
             steps {
-                bat 'mvnw.cmd test'
+                sh './mvnw test'
             }
         }
 
@@ -39,20 +40,20 @@ pipeline {
 
         stage('Docker Build') {
             steps {
-                bat "docker build -t %DOCKER_IMAGE_NAME%:%DOCKER_TAG% ."
+                sh "docker build -t ${DOCKER_IMAGE_NAME}:${DOCKER_TAG} ."
             }
         }
 
         stage('Docker Tag Latest') {
             steps {
-                bat "docker tag %DOCKER_IMAGE_NAME%:%DOCKER_TAG% %DOCKER_IMAGE_NAME%:latest"
+                sh "docker tag ${DOCKER_IMAGE_NAME}:${DOCKER_TAG} ${DOCKER_IMAGE_NAME}:latest"
             }
         }
     }
 
     post {
         always {
-            junit '**/target/surefire-reports/*.xml'
+            junit testResults: '**/target/surefire-reports/*.xml', allowEmptyResults: true
             cleanWs()
         }
 
