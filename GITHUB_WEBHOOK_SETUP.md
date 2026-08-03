@@ -140,3 +140,5 @@ After webhook is working:
 1. Consider adding Docker build stage back to Jenkins when Docker is available
 2. Configure notifications (email, Slack) for build status
 3. Set up deployment stages for production
+
+   ----------------------------------------------------
