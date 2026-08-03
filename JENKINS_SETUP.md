@@ -109,3 +109,76 @@ stage('Docker Push') {
 ```
 
 Note: You'll need to create Docker Hub credentials in Jenkins first.
+
+
+Follow these steps to get your ngrok Authtoken.
+
+Step 1: Sign up or log in
+
+Open:
+
+ngrok Login / Sign Up
+
+Create a free account if you don't already have one.
+
+Step 2: Open the Authtoken page
+
+Go to:
+
+Your Authtoken Dashboard
+
+or directly:
+
+https://dashboard.ngrok.com/get-started/your-authtoken
+Step 3: Copy your Authtoken
+
+You'll see a page similar to:
+
+Connect your account
+
+Your Authtoken
+
+***************************************
+Copy
+
+Click the Copy button.
+
+Step 4: Use the Authtoken
+If using the native ngrok executable
+
+Run:
+
+ngrok config add-authtoken YOUR_AUTHTOKEN
+If using Docker
+
+Pass it as an environment variable:
+
+docker run --rm -it \
+-e NGROK_AUTHTOKEN=YOUR_AUTHTOKEN \
+ngrok/ngrok:latest \
+http host.docker.internal:8080
+
+Step 5: Verify
+
+If authentication succeeds, you'll see output similar to:
+
+Session Status      online
+Account             Your Name (Free)
+Forwarding          https://xxxx.ngrok-free.app -> http://host.docker.internal:8080
+Based on your previous message
+
+You already have:
+
+Session Status    online
+Forwarding
+https://garter-outline-habitable.ngrok-free.dev
+
+This means your Authtoken is already configured correctly. You do not need to configure it again. The tunnel is authenticated and running successfully.
+
+The next step is to configure the GitHub webhook with:
+
+https://garter-outline-habitable.ngrok-free.dev/github-webhook/
+
+If you'd like, I can also walk you through GitHub → Jenkins webhook configuration with screenshots from start to finish.
+
+
