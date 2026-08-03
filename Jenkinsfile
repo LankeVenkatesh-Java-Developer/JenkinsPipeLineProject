@@ -6,59 +6,63 @@ pipeline {
         disableConcurrentBuilds()
     }
 
-    stages {
+    environment {
+        DOCKER_IMAGE_NAME = "springboot-app"
+        DOCKER_TAG = "${env.BUILD_NUMBER}"
+    }
 
+    stages {
 
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/LankeVenkatesh-Java-Developer/DockerProjectWithIntegration.git'
+                checkout scm
             }
         }
 
         stage('Build') {
             steps {
-                dir('DockerProjectIntegeration') {
-                    sh 'chmod +x mvnw'
-                    sh './mvnw clean package'
-                }
+                bat 'mvnw.cmd clean package -DskipTests'
             }
         }
 
         stage('Test') {
             steps {
-                dir('DockerProjectIntegeration') {
-                    sh './mvnw test'
-                }
+                bat 'mvnw.cmd test'
             }
         }
 
         stage('Archive') {
             steps {
-                archiveArtifacts artifacts: 'DockerProjectIntegeration/target/*.jar'
+                archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
             }
         }
 
         stage('Docker Build') {
             steps {
-                dir('DockerProjectIntegeration') {
-                    sh 'docker build -t springboot-app:${BUILD_NUMBER} .'
-                }
+                bat "docker build -t %DOCKER_IMAGE_NAME%:%DOCKER_TAG% ."
+            }
+        }
+
+        stage('Docker Tag Latest') {
+            steps {
+                bat "docker tag %DOCKER_IMAGE_NAME%:%DOCKER_TAG% %DOCKER_IMAGE_NAME%:latest"
             }
         }
     }
 
     post {
-
         always {
-            junit testResults: '**/target/surefire-reports/*.xml', allowEmptyResults: true
+            junit '**/target/surefire-reports/*.xml'
+            cleanWs()
         }
 
         success {
-            echo 'Pipeline completed successfully.'
+            echo "Build Successful"
+            echo "Docker Image: ${env.DOCKER_IMAGE_NAME}:${env.DOCKER_TAG}"
         }
 
         failure {
-            echo 'Pipeline failed.'
+            echo "Build Failed"
         }
     }
 }
