@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Real-Time Product CRUD Application
 
 A Spring Boot application with real-time CRUD operations using WebSocket, complete with authentication and authorization.
@@ -201,4 +202,7 @@ This project is licensed under the MIT License.
 ## Support
 
 For issues and questions, please refer to the project documentation or contact the development team.
+=======
+# DockerProjectWithIntegration
+>>>>>>> 4cbda275e036fa01da44e04d8f8f5ef9c82d888f
 # JenkinsPipeLineProject
