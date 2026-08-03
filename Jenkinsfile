@@ -6,11 +6,6 @@ pipeline {
         disableConcurrentBuilds()
     }
 
-    environment {
-        DOCKER_IMAGE_NAME = "springboot-app"
-        DOCKER_TAG = "${env.BUILD_NUMBER}"
-    }
-
     stages {
 
         stage('Checkout') {
@@ -31,18 +26,6 @@ pipeline {
                 archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
             }
         }
-
-        stage('Docker Build') {
-            steps {
-                sh "docker build -t ${DOCKER_IMAGE_NAME}:${DOCKER_TAG} ."
-            }
-        }
-
-        stage('Docker Tag Latest') {
-            steps {
-                sh "docker tag ${DOCKER_IMAGE_NAME}:${DOCKER_TAG} ${DOCKER_IMAGE_NAME}:latest"
-            }
-        }
     }
 
     post {
@@ -53,7 +36,6 @@ pipeline {
 
         success {
             echo "Build Successful"
-            echo "Docker Image: ${env.DOCKER_IMAGE_NAME}:${env.DOCKER_TAG}"
         }
 
         failure {
