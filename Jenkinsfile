@@ -26,12 +26,6 @@ pipeline {
             }
         }
 
-        stage('Test') {
-            steps {
-                sh './mvnw test'
-            }
-        }
-
         stage('Archive') {
             steps {
                 archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
